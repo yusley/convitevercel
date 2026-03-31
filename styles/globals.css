@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap');
+
+:root {
+  --bg: #eef1f5;
+  --bow: #b8cad8;
+  --rose: #9e5a5a;
+  --slate: #5a7080;
+  --slate-dark: #2e4050;
+  --text: #3a3040;
+  --text-light: #7a6a78;
+  --divider: rgba(90, 112, 128, 0.2);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  font-family: 'Jost', 'Gill Sans', 'Trebuchet MS', Calibri, sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.script { font-family: 'Great Vibes', 'Brush Script MT', 'Segoe Script', cursive; }
+.serif  { font-family: 'Cormorant Garamond', 'Palatino Linotype', Palatino, Georgia, serif; }
