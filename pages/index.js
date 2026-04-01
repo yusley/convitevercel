@@ -489,16 +489,15 @@ function PageAdmin({ showToast }) {
         </div>
 
         {/* Filters */}
-        <div style={{ display: 'flex', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
+        <div className="admin-filters">
           <input
             className="guest-search"
-            style={{ flex: 1, minWidth: 160, marginBottom: 0 }}
             placeholder="Buscar convidado…"
             value={search} onChange={e => setSearch(e.target.value)}
           />
           <select
+            className="admin-filter-select"
             value={filterStatus} onChange={e => setFilterStatus(e.target.value)}
-            style={{ background: 'rgba(255,255,255,.78)', border: '1px solid rgba(90,112,128,.22)', borderRadius: 12, padding: '12px 14px', fontSize: '.85rem', color: 'var(--text)', outline: 'none', cursor: 'pointer' }}
           >
             <option value="todos">Todos</option>
             <option value="confirmado">Confirmados</option>
@@ -514,26 +513,34 @@ function PageAdmin({ showToast }) {
         ) : filtered.length === 0 ? (
           <div className="empty-state"><div style={{ fontSize: '2.5rem', marginBottom: 12, opacity: .5 }}>📋</div><p>Nenhum convidado encontrado.</p></div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table>
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <colgroup>
+                <col className="w-name" />
+                <col className="w-phone" />
+                <col className="w-status" />
+                <col className="w-family" />
+                <col className="w-date" />
+                <col className="w-actions" />
+              </colgroup>
               <thead>
                 <tr>
-                  <th>Nome</th>
-                  <th>WhatsApp</th>
-                  <th>Status</th>
-                  <th>Fam.</th>
-                  <th>Data</th>
+                  <th className="th-name">Nome</th>
+                  <th className="th-phone">WhatsApp</th>
+                  <th className="th-status">Status</th>
+                  <th className="th-family">Fam.</th>
+                  <th className="th-date">Data</th>
                   <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map(g => (
                   <tr key={g.id}>
-                    <td style={{ fontWeight: 400 }}>{g.nome}</td>
-                    <td style={{ fontSize: '.8rem', color: 'var(--text-light)' }}>{g.phone}</td>
-                    <td>
+                    <td className="col-name">{g.nome}</td>
+                    <td className="col-phone">{g.phone}</td>
+                    <td className="col-status">
                       {editingId === g.id ? (
-                        <div style={{ display: 'flex', gap: 4 }}>
+                        <div className="status-actions">
                           {['confirmado','pendente','nao'].map(s => (
                             <button
                               key={s}
@@ -558,11 +565,11 @@ function PageAdmin({ showToast }) {
                         </span>
                       )}
                     </td>
-                    <td style={{ fontSize: '.8rem', color: 'var(--text-light)' }}>
+                    <td className="col-family">
                       {g.acomps?.length ? g.acomps.join(', ') : '—'}
                     </td>
-                    <td style={{ fontSize: '.72rem', color: 'var(--text-light)', whiteSpace: 'nowrap' }}>{g.created_at}</td>
-                    <td>
+                    <td className="col-date">{g.created_at}</td>
+                    <td className="col-actions">
                       <button className="btn-del" onClick={() => handleDelete(g.id)}>Remover</button>
                     </td>
                   </tr>
@@ -668,7 +675,8 @@ export default function Home() {
         .form-wrap   { width: 100%; max-width: 420px; padding: 46px 28px 20px; }
         .guests-wrap { width: 100%; max-width: 460px; padding: 46px 28px 20px; }
         .gifts-wrap  { width: 100%; max-width: 460px; padding: 46px 28px 20px; }
-        .admin-wrap  { width: 100%; max-width: 540px; padding: 46px 28px 20px; }
+        .admin-wrap  { width: min(1180px, calc(100vw - 32px)); max-width: 1180px; padding: 46px 28px 24px; display: flex; flex-direction: column; align-items: stretch; }
+        .admin-wrap > * { width: 100%; }
 
         .btn-primary {
           background: var(--slate); color: #fff; border: none;
@@ -723,12 +731,18 @@ export default function Home() {
           animation: fadeUp .5s ease both;
         }
 
-        .guests-stats { display: flex; gap: 11px; flex-wrap: wrap; }
-        .stat { background: rgba(255,255,255,.78); border-radius: 14px; padding: 13px 16px; flex: 1; min-width: 80px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+        .guests-stats { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+        .stat { background: rgba(255,255,255,.82); border-radius: 16px; padding: 16px 18px; min-width: 0; text-align: center; box-shadow: 0 6px 18px rgba(0,0,0,.06); }
         .stat-num { font-size: 1.85rem; font-weight: 600; color: var(--slate-dark); }
         .stat-label { font-size: .64rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-light); }
-        .guest-search { width: 100%; background: rgba(255,255,255,.78); border: 1px solid rgba(90,112,128,.2); border-radius: 12px; padding: 12px 16px; font-family: inherit; font-size: .87rem; outline: none; margin-bottom: 13px; transition: border-color .2s; }
+        .admin-filters { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
+        .guest-search { flex: 1 1 320px; min-width: 220px; background: rgba(255,255,255,.82); border: 1px solid rgba(90,112,128,.2); border-radius: 12px; padding: 14px 16px; font-family: inherit; font-size: .96rem; outline: none; margin-bottom: 0; transition: border-color .2s; }
         .guest-search:focus { border-color: var(--slate); }
+        .admin-filter-select {
+          min-width: 180px; background: rgba(255,255,255,.82); border: 1px solid rgba(90,112,128,.22);
+          border-radius: 12px; padding: 14px 16px; font-size: .95rem; color: var(--text); outline: none; cursor: pointer;
+          font-family: inherit;
+        }
 
         .guest-badge { font-size: .6rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 50px; font-weight: 500; flex-shrink: 0; display: inline-block; }
         .badge-confirmado { background: #e0f2e8; color: #2d7a4a; }
@@ -758,10 +772,29 @@ export default function Home() {
         .admin-lock .field { width: 100%; max-width: 320px; margin: 0; }
         .admin-lock .btn-primary { display: inline-block; width: auto; padding: 10px 30px; }
         .admin-wrap.login { min-height: calc(100vh - 80px); display:flex; align-items:center; justify-content:center; }
-        table { width: 100%; border-collapse: collapse; font-size: .79rem; }
-        th { font-size: .62rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-light); padding: 9px 10px; text-align: left; border-bottom: 1.5px solid var(--divider); font-weight: 400; }
-        td { padding: 11px 10px; border-bottom: 1px solid rgba(90,112,128,.07); color: var(--text); vertical-align: middle; }
+        .admin-wrap.login > * { width: auto; }
+        .admin-table-wrap {
+          width: 100%; display: block; overflow-x: auto; background: rgba(255,255,255,.7); border: 1px solid rgba(90,112,128,.1);
+          border-radius: 18px; box-shadow: 0 10px 28px rgba(46,64,80,.07);
+        }
+        table.admin-table { width: 100%; border-collapse: collapse; font-size: .92rem; table-layout: fixed; }
+        .admin-table .w-name { width: 24%; }
+        .admin-table .w-phone { width: 16%; }
+        .admin-table .w-status { width: 15%; }
+        .admin-table .w-family { width: 24%; }
+        .admin-table .w-date { width: 13%; }
+        .admin-table .w-actions { width: 8%; }
+        .admin-table th { font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-light); padding: 14px 16px; text-align: left; border-bottom: 1.5px solid var(--divider); font-weight: 500; white-space: nowrap; }
+        .admin-table td { padding: 15px 16px; border-bottom: 1px solid rgba(90,112,128,.07); color: var(--text); vertical-align: middle; }
         tr:hover td { background: rgba(255,255,255,.5); }
+        .th-status, .th-actions, .col-status, .col-actions { text-align: center; }
+        .col-name { font-weight: 500; }
+        .col-phone { color: var(--text-light); }
+        .col-family { color: var(--text-light); line-height: 1.5; }
+        .col-date { font-size: .82rem; color: var(--text-light); white-space: nowrap; }
+        .col-name, .col-phone, .col-family { overflow-wrap: anywhere; }
+        .status-actions { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+        .col-actions .btn-del { white-space: nowrap; }
         .btn-del { background: none; border: 1px solid #e0a0a0; color: var(--rose); border-radius: 8px; padding: 4px 10px; font-size: .7rem; cursor: pointer; transition: background .2s; }
         .btn-del:hover { background: #fde8e8; }
         .btn-refresh { background: none; border: 1.5px solid var(--divider); border-radius: 10px; padding: 0 14px; height: 46px; color: var(--slate); font-size: 1.1rem; cursor: pointer; transition: background .2s; }
@@ -774,6 +807,13 @@ export default function Home() {
 
         @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
         @media(max-width:380px){ nav a{font-size:.6rem;letter-spacing:1.4px;padding:15px 9px} }
+        @media(max-width:768px){
+          .admin-wrap { padding: 38px 16px 22px; }
+          .guests-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .admin-filters { gap: 10px; }
+          .guest-search, .admin-filter-select { min-width: 0; width: 100%; }
+          .btn-refresh { width: 100%; }
+        }
       `}</style>
     </>
   );
